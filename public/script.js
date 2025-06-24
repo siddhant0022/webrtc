@@ -16,14 +16,6 @@ let peerId = null;
 const socket = io();
 
 // Twilio ICE servers configuration
-const iceServers = [
-  { urls: '' },
-  { 
-    urls: '',
-    username: '',  
-    credential: '' 
-  }
-];
 
 // Set up signaling listeners IMMEDIATELY
 socket.on('offer', handleIncomingOffer);
