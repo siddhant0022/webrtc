@@ -1,35 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>WebRTC Video Chat</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoConnect - Connect with Strangers Instantly</title>
+    <meta name="description" content="Start real-time video conversations with random people around the world. Anonymous, secure, and instant connections.">
+    <meta name="author" content="Siddhant">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-  <h1>Simple Video Chat</h1>
-  
-  <div class="container">
-    <div class="videos">
-      <video id="localVideo"  autoplay muted playsinline></video>
-      <video id="remoteVideo" autoplay playsinline></video>
-    </div>
-    
-    <div id="incomingCall" class="call-alert hidden">
-      <h2>Incoming Call!</h2>
-      <div class="call-buttons">
-        <button id="acceptBtn">Accept</button>
-        <button id="rejectBtn">Reject</button>
-      </div>
-    </div>
-    
-    <div class="controls">
-      <button id="startBtn">Start Camera</button>
-      <button id="callBtn" disabled>Start Call</button>
-      <button id="hangupBtn" disabled>End Call</button>
-      <button id="nextBtn" disabled>Next Call</button>
-    
-  </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Animated background -->
+        <div class="background-overlay"></div>
+        <div class="stars"></div>
+        <div class="particles"></div>
+        
+        <!-- Hero content -->
+        <div class="hero-content">
+            <h3 class="hero-title">
+                Connect with<br>
+                <span>Strangers Instantly</span>
+            </h3>
+            
+            <p class="hero-description">
+                Start real-time video conversations with random people around the world. 
+                Click Start to connect — or Next to meet someone new.
+            </p>
+            
+            <button class="cta-button" onclick="window.location.href='chat.html'">
+                <span>Start Chatting Now</span>
+                <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l3 3 7-7"></path>
+                    <path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-wheel">
+                <div class="scroll-dot"></div>
+            </div>
+        </div>
+    </section>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-header">
+                <h2>Why Choose Our Platform?</h2>
+                <p>Experience the future of random video chatting with our cutting-edge features</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Anonymous & Secure</h3>
+                    <p>Your privacy is protected. No registration required, completely anonymous connections.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                        </svg>
+                    </div>
+                    <h3>One-Click to Connect</h3>
+                    <p>Instantly start video conversations with a single click. No complicated setup process.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5,4 15,12 5,20 5,4"></polygon>
+                            <line x1="19" y1="5" x2="19" y2="19"></line>
+                        </svg>
+                    </div>
+                    <h3>Skip Users Instantly</h3>
+                    <p>Not clicking with someone? Skip to the next person instantly and find your perfect chat partner.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Section -->
+    <section id="app-section" class="app-section">
+        <div class="container">
+            <div class="app-card">
+                <div class="app-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m22 8-6 4 6 4V8Z"></path>
+                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                    </svg>
+                    <div class="online-indicator"></div>
+                </div>
+                
+                <h2>Ready to Meet Someone New?</h2>
+                <p>Join thousands of people already connecting. Your next meaningful conversation is just one click away.</p>
+                
+                <div class="app-buttons">
+                    <button class="primary-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m22 8-6 4 6 4V8Z"></path>
+                            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                        </svg>
+                        Start Video Chat
+                    </button>
+                    
+                    <button class="secondary-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="m22 21-3-3m0 0a2 2 0 0 0 0-4 2 2 0 0 0 0 4"></path>
+                        </svg>
+                        View Active Users
+                    </button>
+                </div>
+                
+                <div class="app-stats">
+                    <div class="stat">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="m4.93 4.93 4.24 4.24"></path>
+                            <path d="m14.83 9.17 4.24-4.24"></path>
+                            <path d="m14.83 14.83 4.24 4.24"></path>
+                            <path d="m9.17 14.83-4.24 4.24"></path>
+                        </svg>
+                        <span>150+ Countries</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="m22 21-3-3m0 0a2 2 0 0 0 0-4 2 2 0 0 0 0 4"></path>
+                        </svg>
+                        <span>10K+ Active Users</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m22 8-6 4 6 4V8Z"></path>
+                            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                        </svg>
+                        <span>HD Quality</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>VideoConnect</h3>
+                    <p>Connecting people across the globe through meaningful video conversations. Safe, secure, and completely anonymous.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Community Guidelines</a>
+                        <a href="#">Support</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="footer-links">
+                        <a href="https://github.com/siddhant" target="_blank">GitHub</a>
+                        <a href="https://linkedin.com/in/siddhant" target="_blank">LinkedIn</a>
+                        <a href="#">Twitter</a>
+                        <a href="#">Discord</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>Built with ❤️ by <span>Siddhant</span> • © 2024 VideoConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToApp() {
+            document.getElementById('app-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+    </script>
 </body>
 </html>

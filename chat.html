@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebRTC Video Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Simple Video Chat</h1>
+  
+  <div class="container">
+    <div class="videos">
+      <video id="localVideo"  autoplay muted playsinline></video>  //video-container local-video
+      <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+    
+    <div id="incomingCall" class="call-alert hidden">
+      <h2>Incoming Call!</h2>
+      <div class="call-buttons">
+        <button id="acceptBtn">Accept</button>
+        <button id="rejectBtn">Reject</button>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button id="startBtn">Start Camera</button>
+      <button id="callBtn" disabled>Start Call</button>
+      <button id="hangupBtn" disabled>End Call</button>
+      <button id="nextBtn" disabled>Next Call</button>
+    
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
