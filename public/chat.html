@@ -77,8 +77,9 @@
     .animate-fade-in { animation: fade-in 1s ease; }
   </style>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <!-- Add this before your script.js -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
   <script>
 document.addEventListener('DOMContentLoaded', function() {
   const socket = io();
