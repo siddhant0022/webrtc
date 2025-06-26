@@ -1,285 +1,113 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VideoConnect - Live Video Chat</title>
-    <meta name="description" content="Start your video conversation now. Connect with people around the world instantly.">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+  <title>WebRTC Video Chat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Background Effects -->
-    <div class="background-overlay"></div>
-    <div class="stars"></div>
-    <div class="particles"></div>
-    <div class="floating-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-        <div class="shape shape-4"></div>
+<body class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white relative overflow-x-hidden">
+
+  <!-- Animated Background Shapes -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-10 left-10 w-40 h-40 bg-gradient-to-br from-blue-400 to-purple-600 opacity-30 rounded-full blur-2xl animate-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-32 h-32 bg-gradient-to-tr from-pink-400 to-yellow-400 opacity-20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-br from-indigo-500 to-fuchsia-500 opacity-10 rounded-full blur-3xl animate-pulse -translate-x-1/2 -translate-y-1/2"></div>
+  </div>
+
+  <header class="py-8 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
+      Simple Video Chat
+    </h1>
+    <p class="mt-2 text-lg text-blue-200/80">Connect instantly with anyone, anywhere.</p>
+  </header>
+  
+  <main class="flex flex-col items-center justify-center">
+    <div class="w-full max-w-4xl px-4">
+      <div class="flex flex-col md:flex-row gap-8 items-center justify-center mb-8">
+        <!-- Local Video -->
+        <div class="relative w-full md:w-1/2 aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-blue-800 to-blue-900 shadow-xl border-2 border-blue-500/30 flex items-center justify-center">
+          <video id="localVideo" autoplay muted playsinline class="w-full h-full object-cover rounded-2xl transition-all duration-300"></video>
+          <span class="absolute top-2 left-2 bg-blue-600/80 px-3 py-1 rounded-full text-xs font-semibold animate-fade-in">Your Video</span>
+        </div>
+        <!-- Remote Video -->
+        <div class="relative w-full md:w-1/2 aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-fuchsia-800 to-purple-900 shadow-xl border-2 border-fuchsia-500/30 flex items-center justify-center">
+          <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover rounded-2xl transition-all duration-300"></video>
+          <span class="absolute top-2 left-2 bg-fuchsia-600/80 px-3 py-1 rounded-full text-xs font-semibold animate-fade-in">Stranger</span>
+        </div>
+      </div>
+
+      <!-- Incoming Call Alert -->
+      <div id="incomingCall" class="call-alert hidden flex flex-col items-center justify-center bg-gradient-to-br from-blue-700 to-purple-700 rounded-xl shadow-2xl p-8 mb-8 animate-fade-in">
+        <h2 class="text-2xl font-bold mb-4 animate-bounce">Incoming Call!</h2>
+        <div class="flex gap-4">
+          <button id="acceptBtn" class="px-6 py-2 rounded-full bg-green-500 hover:bg-green-600 text-white font-semibold shadow-lg transition transform hover:scale-105 focus:outline-none">Accept</button>
+          <button id="rejectBtn" class="px-6 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold shadow-lg transition transform hover:scale-105 focus:outline-none">Reject</button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex flex-wrap gap-4 justify-center items-center mt-4 mb-8">
+        <button id="startBtn" class="px-7 py-3 rounded-full bg-gradient-to-r from-blue-400 to-blue-700 text-white font-semibold shadow-md transition hover:from-blue-700 hover:to-blue-400 hover:scale-105 focus:outline-none active:scale-100">Start Camera</button>
+        <button id="callBtn"  class="px-7 py-3 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold shadow-md transition hover:from-green-700 hover:to-green-400 hover:scale-105 focus:outline-none active:scale-100 ">Start Call</button>
+        <button id="hangupBtn"  class="px-7 py-3 rounded-full bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold shadow-md transition hover:from-red-700 hover:to-red-400 hover:scale-105 focus:outline-none active:scale-100 ">End Call</button>
+        <button id="nextBtn" class="px-7 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold shadow-md otransition hover:from-yellow-700 hover:to-yellow-400 hover:scale-105 focus:outline-none active:scale-100 ">Next Call</button>
+      </div>
+      <!-- Text Chat Panel -->
+<div class="w-full max-w-4xl px-4 mb-8">
+  <div class="bg-gradient-to-br from-blue-800 to-purple-900 rounded-2xl shadow-xl border-2 border-blue-500/20 p-6">
+    <h3 class="text-xl font-bold mb-4 text-blue-200">Text Chat</h3>
+    <div id="chatMessages" class="h-56 overflow-y-auto bg-black/30 rounded-lg p-4 mb-4 space-y-2 text-sm"></div>
+    <form id="chatForm" class="flex gap-2">
+      <input id="chatInput" type="text" autocomplete="off" placeholder="Type a message..." class="flex-1 px-4 py-2 rounded-full bg-white/80 text-black focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+      <button type="submit" class="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow transition">Send</button>
+    </form>
+  </div>
+</div>
     </div>
+  </main>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m22 8-6 4 6 4V8Z"></path>
-                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-                    </svg>
-                    <span>VideoConnect</span>
-                </div>
-                <div class="connection-status">
-                    <div class="status-indicator online"></div>
-                    <span>Connected</span>
-                </div>
-            </div>
-        </div>
-    </header>
+  <!-- Animations -->
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .animate-fade-in { animation: fade-in 1s ease; }
+  </style>
 
-    <!-- Main Video Chat Interface -->
-    <main class="video-chat-container">
-        <div class="container">
-            <!-- Page Title -->
-            <div class="page-header">
-                <h1 class="page-title">
-                    <span class="title-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m22 8-6 4 6 4V8Z"></path>
-                            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-                        </svg>
-                    </span>
-                    Simple Video Chat
-                </h1>
-                <p class="page-subtitle">Connect with someone new around the world</p>
-            </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const socket = io();
 
-            <!-- Video Chat Interface -->
-            <div class="video-interface">
-                <!-- Video Streams -->
-                <div class="video-streams">
-                    <!-- Local Video (Your Video) -->
-                    <div class="video-container local-video">
-                        <div class="video-placeholder">
-                            <div class="video-avatar">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                            <div class="video-label">Your Video</div>
-                            <div class="video-status">Camera Off</div>
-                        </div>
-                        <div class="video-overlay">
-                            <div class="video-controls-mini">
-                                <button class="mini-control muted">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="m9 9 3 3m0 0 3-3m-3 3V6m0 6v6"></path>
-                                        <path d="M12 2a10 10 0 1 0 10 10"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const chatMessages = document.getElementById('chatMessages');
 
-                    <!-- Remote Video (Stranger's Video) -->
-                    <div class="video-container remote-video">
-                        <div class="video-placeholder">
-                            <div class="video-avatar">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                            <div class="video-label">Stranger</div>
-                            <div class="video-status">Waiting to connect...</div>
-                            <div class="connecting-animation">
-                                <div class="pulse-ring"></div>
-                                <div class="pulse-ring delay-1"></div>
-                                <div class="pulse-ring delay-2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    appendMessage(msg, true);
+    socket.emit('chat message', msg);
+    chatInput.value = '';
+  });
 
-                <!-- Connection Info -->
-                <div class="connection-info">
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="m4.93 4.93 4.24 4.24"></path>
-                                <path d="m14.83 9.17 4.24-4.24"></path>
-                                <path d="m14.83 14.83 4.24 4.24"></path>
-                                <path d="m9.17 14.83-4.24 4.24"></path>
-                            </svg>
-                        </div>
-                        <div class="info-text">
-                            <span class="info-label">Location</span>
-                            <span class="info-value">Unknown</span>
-                        </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M12 1v6m0 6v6"></path>
-                                <path d="m21 12-6 0-6 0-6 0"></path>
-                            </svg>
-                        </div>
-                        <div class="info-text">
-                            <span class="info-label">Connection</span>
-                            <span class="info-value">Secure</span>
-                        </div>
-                    </div>
-                </div>
+  socket.on('chat message', function(msg) {
+    appendMessage(msg, false);
+  });
 
-                <!-- Control Panel -->
-                <div class="control-panel">
-                    <div class="main-controls">
-                        <button class="control-btn camera-btn" onclick="toggleCamera()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="m22 8-6 4 6 4V8Z"></path>
-                                <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-                            </svg>
-                            <span>Start Camera</span>
-                        </button>
-
-                        <button class="control-btn call-btn active" onclick="startCall()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                            </svg>
-                            <span>Start Call</span>
-                        </button>
-
-                        <button class="control-btn end-btn" onclick="endCall()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 3l18 18"></path>
-                                <path d="M21 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91"></path>
-                            </svg>
-                            <span>End Call</span>
-                        </button>
-
-                        <button class="control-btn next-btn" onclick="nextCall()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 18l6-6-6-6"></path>
-                            </svg>
-                            <span>Next Call</span>
-                        </button>
-                    </div>
-
-                    <!-- Secondary Controls -->
-                    <div class="secondary-controls">
-                        <button class="secondary-btn" onclick="toggleMute()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                        </button>
-                        <button class="secondary-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                                <path d="M3 6h18"></path>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                        </button>
-                        <button class="secondary-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Bar -->
-            <div class="stats-bar">
-                <div class="stat-item">
-                    <div class="stat-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="m22 21-3-3m0 0a2 2 0 0 0 0-4 2 2 0 0 0 0 4"></path>
-                        </svg>
-                    </div>
-                    <span>2,847 Online</span>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                    <div class="stat-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="m4.93 4.93 4.24 4.24"></path>
-                            <path d="m14.83 9.17 4.24-4.24"></path>
-                            <path d="m14.83 14.83 4.24 4.24"></path>
-                            <path d="m9.17 14.83-4.24 4.24"></path>
-                        </svg>
-                    </div>
-                    <span>156 Countries</span>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                    <div class="stat-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                            <line x1="12" y1="19" x2="12" y2="23"></line>
-                            <line x1="8" y1="23" x2="16" y2="23"></line>
-                        </svg>
-                    </div>
-                    <span>HD Audio</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        function toggleCamera() {
-            const btn = event.currentTarget;
-            const span = btn.querySelector('span');
-            if (span.textContent === 'Start Camera') {
-                span.textContent = 'Stop Camera';
-                btn.classList.add('active');
-            } else {
-                span.textContent = 'Start Camera';
-                btn.classList.remove('active');
-            }
-        }
-
-        function startCall() {
-            const remoteVideo = document.querySelector('.remote-video .video-status');
-            remoteVideo.textContent = 'Connected';
-        }
-
-        function endCall() {
-            const remoteVideo = document.querySelector('.remote-video .video-status');
-            remoteVideo.textContent = 'Call ended';
-        }
-
-        function nextCall() {
-            const remoteVideo = document.querySelector('.remote-video .video-status');
-            remoteVideo.textContent = 'Connecting to next person...';
-            setTimeout(() => {
-                remoteVideo.textContent = 'Connected';
-            }, 2000);
-        }
-
-        function toggleMute() {
-            const btn = event.currentTarget;
-            btn.classList.toggle('muted');
-        }
-    </script>
+  function appendMessage(msg, isSelf) {
+    const div = document.createElement('div');
+    div.className = isSelf ? "text-right" : "text-left";
+    div.innerHTML = `<span class="inline-block ${isSelf ? 'bg-blue-500' : 'bg-fuchsia-500'} text-white px-3 py-1 rounded-full">${msg}</span>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+});
+</script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 const express = require('express');
 const http = require('http');
-const socketIO = require('socket.io');
+const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = new Server(server);
 
 // Serve static files from "public" directory (like HTML, CSS, JS)
 app.use(express.static('public'));
@@ -56,6 +56,12 @@ io.on('connection', socket => {
   // Relay ICE candidates to specific peer
   socket.on('candidate', ({ candidate, to }) => {
     io.to(to).emit('candidate', { candidate });
+  });
+
+  // Handle chat message
+  socket.on('chat message', (msg) => {
+    // Broadcast to all except sender
+    socket.broadcast.emit('chat message', msg);
   });
 
   // Handle disconnect
