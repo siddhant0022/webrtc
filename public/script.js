@@ -13,7 +13,7 @@ let localStream;
 let pc;
 let currentOffer = null;
 let peerId = null;
-const socket = io();
+const socket = io("https://webrtc-production-a8a8.up.railway.app");
 
 // Twilio ICE servers configuration
 const iceServers = [
